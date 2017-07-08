@@ -7,54 +7,19 @@ using System.Text.RegularExpressions;
 
 namespace FrozenMountainQuiz
 {
-    class SubString
-    {
-        /*
-         * I realize this is complete overkill to make this class, 
-         * and to make everything private with getters and setters,
-         * just figured I should adhere to good practices and it makes future modification easier.
-        */
-
-        private int numOccurrences;
-        private String value;
-
-        public SubString()
-        {
-            numOccurrences = -1;
-            value = "NO REPEATS FOUND";
-        }
-        
-        public int GetOccurrences()
-        {
-            return this.numOccurrences;
-        }
-        public String GetValue()
-        {
-            return this.value;
-        }
-        public void SetOccurrences(int num)
-        {
-            this.numOccurrences = num;
-        }
-        public void SetValue(String newValue)
-        {
-            this.value = newValue;
-        }
-        public void PrintInfo()
-        {
-            Console.WriteLine("The substring '" + value + "' occurs " + numOccurrences + " times");
-            Console.ReadLine();
-        }
-    }
-
     class Program
     {
-        static SubString FindMaxSubStrings(int len, String searchString)
+        static String FindMaxSubStrings(int len, String searchString, out int maxOccurrences)
         {
-            var subString = new SubString();
+            if (len <= 0 || len > searchString.Length || searchString.Length <= 0)
+            {
+                // Originally I had these seperate and throwing exceptions, but for this scale I think this is adequate.
+                maxOccurrences = 0;
+                return "BAD PARAMETERS";
+            }
             Dictionary<string, int> tempMap = new Dictionary<string, int>();
 
-            for (var offset = 0; offset < (searchString.Length - len); offset++)
+            for (var offset = 0; offset + len < searchString.Length; offset++)
             {
                 var sub = searchString.Substring(offset, len);
                 if (!tempMap.ContainsKey(sub))
@@ -66,24 +31,32 @@ namespace FrozenMountainQuiz
                     tempMap[sub]++;
                 }
             }
-
-            var mostOccurences = tempMap.Values.Max(); // Allows for faster access in the loop
-            subString.SetOccurrences(mostOccurences);
+            maxOccurrences = tempMap.Values.Max();
             foreach (var entry in tempMap)
             {
-                if(entry.Value == mostOccurences)
+                if (entry.Value == maxOccurrences)
                 {
-                    subString.SetValue(entry.Key);
-                    return subString;
+                    return entry.Key;
                 }
             }
-            return subString; //This should never be reached in theory
+            return ""; // Should never be reached
         }
 
         static void Main(string[] args)
         {
-            SubString myString = FindMaxSubStrings(3, "zfabcde224lkfabc51+crsdtab=");
-            myString.PrintInfo();
+            int occurrences = 0;
+            String theString = FindMaxSubStrings(3, "zfabcde224lkfabc51+crsdtab=", out occurrences);
+            if(occurrences > 0)
+            {
+                Console.WriteLine("The substring '" + theString + "' occurs " + occurrences + " times");
+                Console.ReadLine();
+            }
+            else
+            {
+                Console.WriteLine("BAD PARAMETERS");
+                Console.ReadLine();
+            }
+
         }
     }
 }
