@@ -9,14 +9,9 @@ namespace FrozenMountainQuiz
 {
     class Program
     {
-        static String FindMaxSubStrings(int len, String searchString, out int maxOccurrences)
+        static List<String> FindMaxSubStrings(int len, String searchString, out int maxOccurrences)
         {
-            if (len <= 0 || searchString.Length < len || searchString.Length <= 0)
-            {
-                // Originally I had these seperate and throwing exceptions, but for this scale I think this is adequate.
-                maxOccurrences = 0;
-                return "BAD PARAMETERS";
-            }
+            List<String> foundSubSubstrings = new List<string>();
             Dictionary<string, int> ssMap = new Dictionary<string, int>();
 
             for (var offset = 0; offset + len < searchString.Length; offset++)
@@ -36,28 +31,44 @@ namespace FrozenMountainQuiz
             {
                 if (entry.Value == maxOccurrences)
                 {
-                    return entry.Key;
+                    foundSubSubstrings.Add(entry.Key);
                 }
             }
-            return ""; // Should never be reached
+            return foundSubSubstrings;
         }
 
         static void Main(string[] args)
         {
-            int occurrences = 0;
-            String theString = FindMaxSubStrings(2, "2tg5iTPoViM6PM5Nit6HVYG2D8lhS80Bpo0cMyxTaeFW5zbblahobZuKERgro7FL6CCgeWa2M7" +
-                "9PDQqgNamCUZhrgIbu1lBbhGVRtEewtVblah05TLi6qYwPOLmUgQYaGNWwHPcoKblahergOcTu9WThk", out occurrences);
-            if(occurrences > 0)
+            while (true)
             {
-                Console.WriteLine("The substring '" + theString + "' occurs " + occurrences + " times");
-                Console.ReadLine();
-            }
-            else
-            {
-                Console.WriteLine("BAD PARAMETERS");
-                Console.ReadLine();
-            }
+                Console.WriteLine("Please enter a string: ");
+                String searchString = Console.ReadLine();
+                Console.WriteLine("Enter a length of substrings to search for: ");
+                int subStringLen = 0;
+                try
+                {
+                    subStringLen = Convert.ToInt32(Console.ReadLine());
+                }
+                catch (System.FormatException)
+                {
+                    Console.WriteLine("Enter a valid integer.");
+                    continue;
+                }
 
+                // Checks that the input is valid, pretty dirty way of doing this but it is quick and should meet the requirements for this scope.
+                if (subStringLen <= 0 || searchString.Length < subStringLen || searchString.Length <= 0)
+                {
+                    Console.WriteLine("Invalid input, please check input string is longer than substring length specified, and that both lengths are larger than 0.");
+                    continue;
+                }
+                
+                int occurrences = 0;
+                List<String> foundSubSubstrings = FindMaxSubStrings(subStringLen, searchString, out occurrences);
+                foreach(String foundString in foundSubSubstrings)
+                {
+                    Console.WriteLine("The substring " + foundString + " occurs " + occurrences + " times in string " + searchString);
+                }
+            }
         }
     }
 }
