@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.RegularExpressions;
 
 namespace FrozenMountainQuiz
 {
@@ -41,6 +38,7 @@ namespace FrozenMountainQuiz
         {
             while (true)
             {
+                Console.WriteLine("\n");
                 Console.WriteLine("Please enter a string: ");
                 String searchString = Console.ReadLine();
                 Console.WriteLine("Enter a length of substrings to search for: ");
@@ -56,7 +54,7 @@ namespace FrozenMountainQuiz
                 }
 
                 // Checks that the input is valid, pretty dirty way of doing this but it is quick and should meet the requirements for this scope.
-                if (subStringLen <= 0 || searchString.Length < subStringLen || searchString.Length <= 0)
+                if (subStringLen <= 0 || searchString.Length <= subStringLen || searchString.Length <= 0)
                 {
                     Console.WriteLine("Invalid input, please check input string is longer than substring length specified, and that both lengths are larger than 0.");
                     continue;
